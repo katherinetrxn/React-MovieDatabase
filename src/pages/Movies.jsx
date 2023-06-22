@@ -4,6 +4,7 @@ import "./Movies.css";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { Waveform } from "@uiball/loaders";
 
 function Movies() {
   const [sliderValue, setSliderValue] = useState("");
@@ -38,6 +39,9 @@ function Movies() {
 
   const fetchMovies = async () => {
     if (!searchInputValue) return;
+
+    setLoading(true);
+
     let filterString = "";
     if (filterOn) {
       filterString = `&y=${sliderValue}`; // add year filter to search query
@@ -48,7 +52,6 @@ function Movies() {
     const moviesData = response.data;
 
     if (!moviesData.Search) {
-      setLoading(false);
       setMoviesData([]);
       return;
     }
@@ -58,8 +61,8 @@ function Movies() {
         ? moviesData.Search.filter((movie) => movie.Year === sliderValue)
         : moviesData.Search;
 
-    setLoading(false);
     setMoviesData(filteredMovies.slice(0, 6));
+    setLoading(false);
   };
 
   return (
@@ -109,8 +112,7 @@ function Movies() {
             <div className="row">
               <div className="main__result">
                 <h2 className="search__result">
-                  Search results{" "}
-                  {searchInputValue && `for ${searchInputValue}`}
+                  Search results {searchInputValue && `for ${searchInputValue}`}
                 </h2>
                 <div className="main__year">
                   <h2 id="main__year--label">
@@ -176,30 +178,43 @@ function Movies() {
                     </Link>
                   </div>
                 )}
-                {!loading && moviesData.length > 0 && (
-                  <div className="movies">
-                    {moviesData.map((movie) => (
-                      <div className="movie-wrapper" key={movie.imdbID}>
-                        <div className="movie">
-                          <figure className="movie__img">
-                            <div className="movie__img--overlay">
-                              <p>
-                                More info
-                                <i className="fa-solid fa-arrow-right"></i>
-                              </p>
-                            </div>
-                            <img
-                              className="figure__img"
-                              src={movie.Poster}
-                              alt=""
-                            />
-                          </figure>
-                          <h2 className="movie__title">{movie.Title}</h2>
-                          <p className="movie__year">{movie.Year}</p>
-                        </div>
-                      </div>
-                    ))}
+                {loading ? (
+                  <div>
+                    <Waveform
+                      size={40}
+                      lineWeight={3.5}
+                      speed={1}
+                      color="black"
+                    />
                   </div>
+                ) : (
+                  <>
+                    {moviesData.length > 0 && (
+                      <div className="movies">
+                        {moviesData.map((movie) => (
+                          <div className="movie-wrapper" key={movie.imdbID}>
+                            <div className="movie">
+                              <figure className="movie__img">
+                                <div className="movie__img--overlay">
+                                  <p>
+                                    More info
+                                    <i className="fa-solid fa-arrow-right"></i>
+                                  </p>
+                                </div>
+                                <img
+                                  className="figure__img"
+                                  src={movie.Poster}
+                                  alt=""
+                                />
+                              </figure>
+                              <h2 className="movie__title">{movie.Title}</h2>
+                              <p className="movie__year">{movie.Year}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

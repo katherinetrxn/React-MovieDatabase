@@ -1,8 +1,16 @@
 import Nav from "../components/Nav.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import './Home.css'
+import "./Home.css";
+import useAuth from "../hooks/useAuth.js";
+import Login from "../components/Login.jsx";
 
 function Home() {
+  const { user, logout } = useAuth();
+
+  console.log(user);
+
+  if (!user) return <Login />;
+
   return (
     <div className="home">
       <header className="header">
@@ -26,6 +34,7 @@ function Home() {
             {/* if loading, search icon, if not loading, spinner icon */}
           </button>
         </div>
+        <button onClick={logout}>Logout</button>
       </header>
     </div>
   );
