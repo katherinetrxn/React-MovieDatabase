@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faArrowLeft, faSpinner)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
